@@ -3027,8 +3027,8 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(div, "class", "currencies svelte-1quzg1n");
-    			add_location(div, file$4, 39, 4, 751);
+    			attr_dev(div, "class", "currencies svelte-1mg15wy");
+    			add_location(div, file$4, 39, 4, 754);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -3139,11 +3139,11 @@ var app = (function () {
     			p = element("p");
     			t1 = text(t1_value);
     			t2 = space();
-    			attr_dev(div0, "class", "icon svelte-1quzg1n");
-    			add_location(div0, file$4, 48, 16, 1035);
-    			add_location(p, file$4, 51, 16, 1168);
-    			attr_dev(div1, "class", "currency svelte-1quzg1n");
-    			add_location(div1, file$4, 41, 12, 830);
+    			attr_dev(div0, "class", "icon svelte-1mg15wy");
+    			add_location(div0, file$4, 48, 16, 1038);
+    			add_location(p, file$4, 51, 16, 1171);
+    			attr_dev(div1, "class", "currency svelte-1mg15wy");
+    			add_location(div1, file$4, 41, 12, 833);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -3260,12 +3260,12 @@ var app = (function () {
     			t3 = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
-    			attr_dev(div0, "class", "icon svelte-1quzg1n");
-    			add_location(div0, file$4, 29, 4, 536);
-    			add_location(p, file$4, 32, 4, 633);
-    			attr_dev(div1, "class", "downArrow svelte-1quzg1n");
-    			add_location(div1, file$4, 33, 4, 661);
-    			attr_dev(div2, "class", "selected svelte-1quzg1n");
+    			attr_dev(div0, "class", "icon svelte-1mg15wy");
+    			add_location(div0, file$4, 29, 4, 539);
+    			add_location(p, file$4, 32, 4, 636);
+    			attr_dev(div1, "class", "downArrow svelte-1mg15wy");
+    			add_location(div1, file$4, 33, 4, 664);
+    			attr_dev(div2, "class", "selected svelte-1mg15wy");
     			add_location(div2, file$4, 20, 0, 387);
     		},
     		l: function claim(nodes) {
@@ -3396,7 +3396,7 @@ var app = (function () {
     	});
 
     	const click_handler = () => {
-    		$$invalidate(0, isOpen = true);
+    		$$invalidate(0, isOpen = !isOpen);
     	};
 
     	const focusout_handler = () => {
