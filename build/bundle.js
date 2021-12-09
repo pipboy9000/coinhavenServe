@@ -128,6 +128,13 @@ var app = (function () {
         node.addEventListener(event, handler, options);
         return () => node.removeEventListener(event, handler, options);
     }
+    function stop_propagation(fn) {
+        return function (event) {
+            event.stopPropagation();
+            // @ts-ignore
+            return fn.call(this, event);
+        };
+    }
     function attr(node, attribute, value) {
         if (value == null)
             node.removeAttribute(attribute);
@@ -1815,6 +1822,8 @@ var app = (function () {
     	let t32;
     	let p8;
     	let current;
+    	let mounted;
+    	let dispose;
     	fahome = new FaHome({ $$inline: true });
     	fawallet = new FaWallet({ $$inline: true });
     	faexchangealt = new FaExchangeAlt({ $$inline: true });
@@ -1905,67 +1914,87 @@ var app = (function () {
     			p8.textContent = "API Management";
     			if (!src_url_equal(img.src, img_src_value = "images/logo.jpg")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "brand logo");
-    			add_location(img, file$b, 17, 8, 659);
-    			attr_dev(p0, "class", "svelte-11kxbrf");
-    			add_location(p0, file$b, 18, 8, 715);
-    			attr_dev(div0, "class", "brand svelte-11kxbrf");
-    			add_location(div0, file$b, 16, 4, 630);
-    			attr_dev(div1, "class", "icon svelte-11kxbrf");
-    			add_location(div1, file$b, 22, 12, 794);
-    			add_location(p1, file$b, 25, 12, 874);
-    			attr_dev(li0, "class", "svelte-11kxbrf");
-    			add_location(li0, file$b, 21, 8, 776);
-    			attr_dev(div2, "class", "icon svelte-11kxbrf");
-    			add_location(div2, file$b, 28, 12, 933);
-    			add_location(p2, file$b, 31, 12, 1015);
-    			attr_dev(li1, "class", "svelte-11kxbrf");
-    			add_location(li1, file$b, 27, 8, 915);
-    			attr_dev(div3, "class", "icon svelte-11kxbrf");
-    			add_location(div3, file$b, 34, 12, 1071);
-    			add_location(p3, file$b, 37, 12, 1158);
-    			attr_dev(li2, "class", "svelte-11kxbrf");
-    			add_location(li2, file$b, 33, 8, 1053);
-    			attr_dev(li3, "class", "svelte-11kxbrf");
-    			add_location(li3, file$b, 42, 16, 1257);
-    			attr_dev(li4, "class", "svelte-11kxbrf");
-    			add_location(li4, file$b, 43, 16, 1291);
-    			attr_dev(li5, "class", "svelte-11kxbrf");
-    			add_location(li5, file$b, 44, 16, 1322);
-    			attr_dev(li6, "class", "svelte-11kxbrf");
-    			add_location(li6, file$b, 45, 16, 1355);
-    			attr_dev(ul0, "class", "exchange svelte-11kxbrf");
-    			add_location(ul0, file$b, 41, 12, 1218);
-    			attr_dev(li7, "class", "svelte-11kxbrf");
-    			add_location(li7, file$b, 40, 8, 1200);
-    			attr_dev(div4, "class", "icon svelte-11kxbrf");
-    			add_location(div4, file$b, 50, 12, 1439);
-    			add_location(p4, file$b, 53, 12, 1528);
-    			attr_dev(li8, "class", "svelte-11kxbrf");
-    			add_location(li8, file$b, 49, 8, 1421);
-    			attr_dev(div5, "class", "icon svelte-11kxbrf");
-    			add_location(div5, file$b, 56, 12, 1585);
-    			add_location(p5, file$b, 59, 12, 1674);
-    			attr_dev(li9, "class", "svelte-11kxbrf");
-    			add_location(li9, file$b, 55, 8, 1567);
-    			attr_dev(div6, "class", "icon svelte-11kxbrf");
-    			add_location(div6, file$b, 62, 12, 1735);
-    			add_location(p6, file$b, 65, 12, 1818);
-    			attr_dev(li10, "class", "svelte-11kxbrf");
-    			add_location(li10, file$b, 61, 8, 1717);
-    			attr_dev(div7, "class", "icon svelte-11kxbrf");
-    			add_location(div7, file$b, 68, 12, 1886);
-    			add_location(p7, file$b, 71, 12, 1972);
-    			attr_dev(li11, "class", "svelte-11kxbrf");
-    			add_location(li11, file$b, 67, 8, 1868);
-    			attr_dev(div8, "class", "icon svelte-11kxbrf");
-    			add_location(div8, file$b, 74, 12, 2038);
-    			add_location(p8, file$b, 77, 12, 2122);
-    			attr_dev(li12, "class", "svelte-11kxbrf");
-    			add_location(li12, file$b, 73, 8, 2020);
-    			attr_dev(ul1, "class", "list svelte-11kxbrf");
-    			add_location(ul1, file$b, 20, 4, 749);
-    			attr_dev(main, "class", "svelte-11kxbrf");
-    			add_location(main, file$b, 15, 0, 618);
+    			add_location(img, file$b, 23, 8, 795);
+    			attr_dev(p0, "class", "svelte-xzq3dm");
+    			toggle_class(p0, "hideTag", !/*isOpen*/ ctx[0]);
+    			add_location(p0, file$b, 24, 8, 851);
+    			attr_dev(div0, "class", "brand svelte-xzq3dm");
+    			toggle_class(div0, "isOpen", /*isOpen*/ ctx[0]);
+    			add_location(div0, file$b, 22, 4, 753);
+    			attr_dev(div1, "class", "icon svelte-xzq3dm");
+    			add_location(div1, file$b, 28, 12, 954);
+    			attr_dev(p1, "class", "svelte-xzq3dm");
+    			toggle_class(p1, "hideTag", !/*isOpen*/ ctx[0]);
+    			add_location(p1, file$b, 31, 12, 1034);
+    			attr_dev(li0, "class", "svelte-xzq3dm");
+    			add_location(li0, file$b, 27, 8, 936);
+    			attr_dev(div2, "class", "icon svelte-xzq3dm");
+    			add_location(div2, file$b, 34, 12, 1117);
+    			attr_dev(p2, "class", "svelte-xzq3dm");
+    			toggle_class(p2, "hideTag", !/*isOpen*/ ctx[0]);
+    			add_location(p2, file$b, 37, 12, 1199);
+    			attr_dev(li1, "class", "svelte-xzq3dm");
+    			add_location(li1, file$b, 33, 8, 1099);
+    			attr_dev(div3, "class", "icon svelte-xzq3dm");
+    			add_location(div3, file$b, 45, 12, 1449);
+    			attr_dev(p3, "class", "svelte-xzq3dm");
+    			toggle_class(p3, "hideTag", !/*isOpen*/ ctx[0]);
+    			add_location(p3, file$b, 48, 12, 1536);
+    			attr_dev(li2, "class", "svelte-xzq3dm");
+    			add_location(li2, file$b, 39, 8, 1261);
+    			attr_dev(li3, "class", "svelte-xzq3dm");
+    			add_location(li3, file$b, 53, 16, 1678);
+    			attr_dev(li4, "class", "svelte-xzq3dm");
+    			add_location(li4, file$b, 54, 16, 1712);
+    			attr_dev(li5, "class", "svelte-xzq3dm");
+    			add_location(li5, file$b, 55, 16, 1743);
+    			attr_dev(li6, "class", "svelte-xzq3dm");
+    			add_location(li6, file$b, 56, 16, 1776);
+    			attr_dev(ul0, "class", "svelte-xzq3dm");
+    			add_location(ul0, file$b, 52, 12, 1656);
+    			attr_dev(li7, "class", "exchange svelte-xzq3dm");
+    			toggle_class(li7, "exchangeOpen", /*exchangeOpen*/ ctx[1]);
+    			add_location(li7, file$b, 51, 8, 1602);
+    			attr_dev(div4, "class", "icon svelte-xzq3dm");
+    			add_location(div4, file$b, 61, 12, 1860);
+    			attr_dev(p4, "class", "svelte-xzq3dm");
+    			toggle_class(p4, "hideTag", !/*isOpen*/ ctx[0]);
+    			add_location(p4, file$b, 64, 12, 1949);
+    			attr_dev(li8, "class", "svelte-xzq3dm");
+    			add_location(li8, file$b, 60, 8, 1842);
+    			attr_dev(div5, "class", "icon svelte-xzq3dm");
+    			add_location(div5, file$b, 67, 12, 2030);
+    			attr_dev(p5, "class", "svelte-xzq3dm");
+    			toggle_class(p5, "hideTag", !/*isOpen*/ ctx[0]);
+    			add_location(p5, file$b, 70, 12, 2119);
+    			attr_dev(li9, "class", "svelte-xzq3dm");
+    			add_location(li9, file$b, 66, 8, 2012);
+    			attr_dev(div6, "class", "icon svelte-xzq3dm");
+    			add_location(div6, file$b, 73, 12, 2204);
+    			attr_dev(p6, "class", "svelte-xzq3dm");
+    			toggle_class(p6, "hideTag", !/*isOpen*/ ctx[0]);
+    			add_location(p6, file$b, 76, 12, 2287);
+    			attr_dev(li10, "class", "svelte-xzq3dm");
+    			add_location(li10, file$b, 72, 8, 2186);
+    			attr_dev(div7, "class", "icon svelte-xzq3dm");
+    			add_location(div7, file$b, 79, 12, 2379);
+    			attr_dev(p7, "class", "svelte-xzq3dm");
+    			toggle_class(p7, "hideTag", !/*isOpen*/ ctx[0]);
+    			add_location(p7, file$b, 82, 12, 2465);
+    			attr_dev(li11, "class", "svelte-xzq3dm");
+    			add_location(li11, file$b, 78, 8, 2361);
+    			attr_dev(div8, "class", "icon svelte-xzq3dm");
+    			add_location(div8, file$b, 85, 12, 2555);
+    			attr_dev(p8, "class", "svelte-xzq3dm");
+    			toggle_class(p8, "hideTag", !/*isOpen*/ ctx[0]);
+    			add_location(p8, file$b, 88, 12, 2639);
+    			attr_dev(li12, "class", "svelte-xzq3dm");
+    			add_location(li12, file$b, 84, 8, 2537);
+    			attr_dev(ul1, "class", "list svelte-xzq3dm");
+    			add_location(ul1, file$b, 26, 4, 909);
+    			attr_dev(main, "class", "svelte-xzq3dm");
+    			toggle_class(main, "isOpen", /*isOpen*/ ctx[0]);
+    			add_location(main, file$b, 15, 0, 619);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2036,8 +2065,65 @@ var app = (function () {
     			append_dev(li12, t32);
     			append_dev(li12, p8);
     			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(li2, "click", stop_propagation(/*click_handler*/ ctx[2]), false, false, true),
+    					listen_dev(main, "click", /*click_handler_1*/ ctx[3], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
     		},
-    		p: noop,
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*isOpen*/ 1) {
+    				toggle_class(p0, "hideTag", !/*isOpen*/ ctx[0]);
+    			}
+
+    			if (dirty & /*isOpen*/ 1) {
+    				toggle_class(div0, "isOpen", /*isOpen*/ ctx[0]);
+    			}
+
+    			if (dirty & /*isOpen*/ 1) {
+    				toggle_class(p1, "hideTag", !/*isOpen*/ ctx[0]);
+    			}
+
+    			if (dirty & /*isOpen*/ 1) {
+    				toggle_class(p2, "hideTag", !/*isOpen*/ ctx[0]);
+    			}
+
+    			if (dirty & /*isOpen*/ 1) {
+    				toggle_class(p3, "hideTag", !/*isOpen*/ ctx[0]);
+    			}
+
+    			if (dirty & /*exchangeOpen*/ 2) {
+    				toggle_class(li7, "exchangeOpen", /*exchangeOpen*/ ctx[1]);
+    			}
+
+    			if (dirty & /*isOpen*/ 1) {
+    				toggle_class(p4, "hideTag", !/*isOpen*/ ctx[0]);
+    			}
+
+    			if (dirty & /*isOpen*/ 1) {
+    				toggle_class(p5, "hideTag", !/*isOpen*/ ctx[0]);
+    			}
+
+    			if (dirty & /*isOpen*/ 1) {
+    				toggle_class(p6, "hideTag", !/*isOpen*/ ctx[0]);
+    			}
+
+    			if (dirty & /*isOpen*/ 1) {
+    				toggle_class(p7, "hideTag", !/*isOpen*/ ctx[0]);
+    			}
+
+    			if (dirty & /*isOpen*/ 1) {
+    				toggle_class(p8, "hideTag", !/*isOpen*/ ctx[0]);
+    			}
+
+    			if (dirty & /*isOpen*/ 1) {
+    				toggle_class(main, "isOpen", /*isOpen*/ ctx[0]);
+    			}
+    		},
     		i: function intro(local) {
     			if (current) return;
     			transition_in(fahome.$$.fragment, local);
@@ -2071,6 +2157,8 @@ var app = (function () {
     			destroy_component(fausercog);
     			destroy_component(fadollarsign);
     			destroy_component(mdsettings);
+    			mounted = false;
+    			run_all(dispose);
     		}
     	};
 
@@ -2088,13 +2176,23 @@ var app = (function () {
     function instance$b($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('SideMenu', slots, []);
-    	let isOpen = true;
+    	let isOpen = false;
     	let exchangeOpen = false;
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<SideMenu> was created with unknown prop '${key}'`);
     	});
+
+    	const click_handler = () => {
+    		$$invalidate(1, exchangeOpen = !exchangeOpen);
+    		if (exchangeOpen) $$invalidate(0, isOpen = true);
+    	};
+
+    	const click_handler_1 = () => {
+    		$$invalidate(0, isOpen = !isOpen);
+    		if (!isOpen) $$invalidate(1, exchangeOpen = false);
+    	};
 
     	$$self.$capture_state = () => ({
     		FaWallet,
@@ -2110,15 +2208,15 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('isOpen' in $$props) isOpen = $$props.isOpen;
-    		if ('exchangeOpen' in $$props) exchangeOpen = $$props.exchangeOpen;
+    		if ('isOpen' in $$props) $$invalidate(0, isOpen = $$props.isOpen);
+    		if ('exchangeOpen' in $$props) $$invalidate(1, exchangeOpen = $$props.exchangeOpen);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [];
+    	return [isOpen, exchangeOpen, click_handler, click_handler_1];
     }
 
     class SideMenu extends SvelteComponentDev {
